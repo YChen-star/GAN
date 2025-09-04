@@ -3,19 +3,16 @@ import numpy as np
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 
-
-# load data
 file_path = "CAC40 data.xlsx"  
-df = pd.read_excel(file_path, skiprows=2)  # only read returns column
+df = pd.read_excel(file_path, skiprows=2) 
 df.columns = ['Date', 'Closing Price', 'Returns', 'Sorted Returns']  
 df['Returns'] = pd.to_numeric(df['Returns'], errors='coerce')  
-returns = df['Returns'].dropna()  # delete NaN
+returns = df['Returns'].dropna() 
 sorted_returns = returns.sort_values()
 
 mu = returns.mean()
 sigma = returns.std()
 
-# VaR parameter
 delta_t = 1
 confidence_level_95 = 0.95
 confidence_level_99 = 0.99
@@ -24,7 +21,6 @@ z_95 = norm.ppf(1 - confidence_level_95)
 z_99 = norm.ppf(1 - confidence_level_99)
 z_975 = norm.ppf(1 - confidence_level_975)
 
-# calculate Variance-Covariance VaR
 vc_var_95 = -(mu + z_95 * sigma)
 vc_var_99 = -(mu + z_99 * sigma)
 vc_var_975 = -(mu + z_975 * sigma)
@@ -32,8 +28,7 @@ vc_var_975 = -(mu + z_975 * sigma)
 var_95 = mu + z_95 * sigma
 var_99 = mu + z_99 * sigma
 var_975 = mu + z_975 * sigma
-#vc_var_95 = z_95 * sigma * np.sqrt(delta_t)
-#vc_var_99 = z_99 * sigma * np.sqrt(delta_t)
+
 
 # print result
 print(f"Variance-Covariance VaR (95%, 1-day): {vc_var_95:.4%}")
